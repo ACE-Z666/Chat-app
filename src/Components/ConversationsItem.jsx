@@ -11,7 +11,7 @@ const ConversationsItem = ({ props }) => {
        <div className='flex justify-between items-center w-[19vw] h-full '><p className='text-sm'>{props.lastMessage}</p>
        <p className='text-sm pr-3'>{props.timeStamp}</p>
        </div>
-       </div>     
+       </div>    
        
       </div>
     </div>

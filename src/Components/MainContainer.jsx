@@ -1,13 +1,19 @@
 import React from 'react'
 import Sidebar from './Sidebar'
-import WorkArea from './ChatArea'
+import ChatArea from './ChatArea'
+import Welcome from './Welcome'
+import CreateGroups from './CreateGroups'
 
 
 const MainContainer = () => {
+
   return (
         <div  className='bg-[#fff4f5] h-[90vh] w-[90vw] rounded-2xl shadow-mc flex '>
             <Sidebar/>
-            <WorkArea></WorkArea>
+          {/* <ChatArea props={conversations[0]}/> */}
+          {/*<Welcome></Welcome> */}
+          <CreateGroups></CreateGroups>
+
         </div>
   )
 }

@@ -6,7 +6,7 @@ import MessageSelf from './MessageSelf';
 import MessageOthers from './MessageOthers';
 
 
-const WorkArea = () => {
+const ChatArea = () => {
   return (
     <div className=' h-full w-[63vw] px-6 bg-[#E8E9EB] rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2'>
         <div className='h-[8vh] w-full flex justify-start items-center bg-[#E0DFD5] rounded-xl px-9 pb-4'>
@@ -54,4 +54,4 @@ const WorkArea = () => {
   )
 }
 
-export default WorkArea
+export default ChatArea
