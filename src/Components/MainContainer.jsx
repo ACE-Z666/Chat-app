@@ -3,16 +3,19 @@ import Sidebar from './Sidebar'
 import ChatArea from './ChatArea'
 import Welcome from './Welcome'
 import CreateGroups from './CreateGroups'
+import Users_Groups from './Users_Groups'
+import { Outlet } from 'react-router-dom'
 
 
 const MainContainer = () => {
 
   return (
         <div  className='bg-[#fff4f5] h-[90vh] w-[90vw] rounded-2xl shadow-mc flex '>
-            <Sidebar/>
-          {/* <ChatArea props={conversations[0]}/> */}
+          <Sidebar/>
+          <Outlet  />
           {/*<Welcome></Welcome> */}
-          <CreateGroups></CreateGroups>
+          {/* <ChatArea/>*/} 
+          {/* <CreateGroups></CreateGroups>*/}
 
         </div>
   )

@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   return (
     <div className='h-full w-[27vw] bg-[#E8E9EB] rounded-tl-2xl rounded-l-2xl flex flex-col items-center px-4 py-5'>
-       <div className='h-[8vh] w-[96%] flex items-center justify-between rounded-xl text-white bg-[#E0DFD5] px-5 '>
+       <div className='h-[8vh] w-[96%] flex items-center justify-between rounded-xl text-white bg-[#E0DFD5] px-5 shade-g'>
             <IconButton> 
                 <AccountCircleIcon className='scale-125'/> 
             </IconButton>
@@ -48,12 +48,12 @@ const Sidebar = () => {
                 </IconButton>
             </div>
        </div>
-       <div className='h-[8vh] w-[96%] flex items-center justify-start rounded-full bg-[#E0DFD5] px-5 my-4'> 
+       <div className='h-[8vh] w-[96%] flex items-center justify-start rounded-full bg-[#E0DFD5] px-5 my-4 shade-g'> 
         <IconButton>
             <SearchIcon className='scale-125'/>
         </IconButton>
         <input placeholder='Search' className=' pl-2w-full h-6 bg-transparent border:none outline-none text-gray-800' /></div>
-       <div className='h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-6 py-6'>
+       <div className='h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-6 py-6 shade-g'>
         {conversations.map((conversation) => {
             return <ConversationsItem props={conversation} key={conversation.name}/>
         })}
