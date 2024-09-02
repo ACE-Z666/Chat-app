@@ -8,6 +8,7 @@ import CreateGroups from './Components/CreateGroups'
 import Groups from './Components/Groups'
 import { Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import SignUp from './Components/SignUp'
 
 function App() {
   const lightTheme = useSelector((state) => state.theme.light);
@@ -18,6 +19,7 @@ function App() {
     <div className={'h-screen flex items-center justify-center m-0' + (lightTheme ? " white-img" : " dark-img")}>
      <Routes>
       <Route path='/' element={<Login/>}/>
+      <Route path='signup' element={<SignUp/>}/>
       <Route path='app' element={<MainContainer/>}>
        <Route path='welcome' element={<Welcome/>}></Route>
        <Route path='users' element={<Users/>}></Route>
