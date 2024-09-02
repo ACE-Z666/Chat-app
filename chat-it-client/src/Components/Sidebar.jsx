@@ -40,11 +40,11 @@ const Sidebar = () => {
 
   return (
     <div className='h-full w-[27vw]  rounded-tl-2xl rounded-l-2xl flex flex-col items-center px-4 py-5' >
-       <div className={"h-[8vh] w-[96%] flex items-center justify-between rounded-xl bg-[#E0DFD5] px-5 shade-g" + (lightTheme ? "" : " dark-theme")}>
+       <div id='side-icons' className={"h-[8vh] w-[96%] flex items-center justify-between rounded-xl bg-[#E0DFD5] px-5 shade-g" + (lightTheme ? "" : " dark-theme")}>
             <IconButton> 
                 <AccountCircleIcon className={'scale-125' + (lightTheme ? "" : " dark-theme1")}/> 
             </IconButton>
-            <div className='flex items-center justify-around gap-x-5'>
+            <div  id='side-icons2' className='flex items-center justify-around gap-x-5'>
                 <IconButton onClick={() => navigate('/app/users')}>
                     <PersonAddIcon className={'scale-125'+(lightTheme ? "" : " dark-theme1")}/>
                 </IconButton>
@@ -63,12 +63,12 @@ const Sidebar = () => {
 
             </div>
        </div>
-       <div className={'h-[8vh] w-[96%] flex items-center justify-start rounded-full bg-[#E0DFD5] px-5 my-4 shade-g' + (lightTheme ? "" : " dark-theme1")}> 
+       <div id='side-user' className={'h-[8vh] w-[96%] flex items-center justify-start rounded-full bg-[#E0DFD5] px-5 my-4 shade-g' + (lightTheme ? "" : " dark-theme1")}> 
         <IconButton>
             <SearchIcon className={'scale-125' + (lightTheme ? "" : " dark-theme1")}/>
         </IconButton>
         <input placeholder='Search' className={' pl-2 w-full h-6 bg-transparent border:none outline-none' + (lightTheme ? " text-gray-800" : " text-white")} /></div>
-       <div className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
+       <div id='side-user' className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
         {conversations.map((conversation) => {
             return <ConversationsItem props={conversation} key={conversation.name} />
         })}

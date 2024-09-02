@@ -13,7 +13,7 @@ const MainContainer = () => {
   const lightTheme = useSelector((state) => state.theme.light);
 
   return (
-        <div  className={'h-[90vh] w-[90vw] rounded-2xl flex px-10 py-6 items-center justify-center ' + ( lightTheme ? " white-cont" : " dark-cont")}>
+        <div  className={'h-[90vh] sm:w-[90%]  w-[85%] rounded-2xl flex px-10 py-6 items-center justify-center mx-4 ' + ( lightTheme ? " white-cont" : " dark-cont")}>
           <Sidebar/>
           <Outlet  />
           {/*<Welcome></Welcome> */}

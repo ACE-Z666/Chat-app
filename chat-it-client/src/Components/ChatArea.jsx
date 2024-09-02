@@ -12,8 +12,8 @@ import { useSelector } from 'react-redux';
 const ChatArea = () => {
   const lightTheme = useSelector((state) => state.theme.light);
   return (
-    <div className=' h-full w-[63vw] px-6 rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2'>
-        <div className={'h-[8vh] w-full flex justify-start items-center bg-[#E0DFD5] rounded-xl px-9 pb-4 shade-g' + (lightTheme ? "" : " dark-theme")}>
+    <div className=' h-full w-[63vw] sm:px-6 px-2 rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2'>
+        <div className={'sm:h-[8vh] h-[8vh] w-full flex items-center bg-[#E0DFD5] rounded-xl sm:px-9  px-2 pb-4 shade-g justify-between' + (lightTheme ? "" : " dark-theme")}>
         <div className={'flex text-stone-500 items-center pt-3 justify-between' + (lightTheme ? "" : " text-white")} >
        <div className={'' + (lightTheme ? "con-icon" : " con-icon-d")}>T</div>
        <div className='flex flex-col pl-2'>
@@ -21,7 +21,7 @@ const ChatArea = () => {
        <div className='flex justify-start items-center w-[52vw] h-full '><p className='text-sm pr-3'>Today</p>
        </div>
        </div>
-       <div className='mr-0'>
+       <div className='sm:mr-0 '>
         <IconButton>
           <DeleteIcon className={'scale-125' + (lightTheme ? "" : " text-white")}/>
         </IconButton>

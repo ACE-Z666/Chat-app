@@ -16,7 +16,7 @@ function App() {
 
   return (
     <>
-    <div className={'h-screen flex items-center justify-center m-0' + (lightTheme ? " white-img" : " dark-img")}>
+    <div id='main' className={'h-screen flex items-center justify-center m-0' + (lightTheme ? " white-img" : " dark-img")}>
      <Routes>
       <Route path='/' element={<Login/>}/>
       <Route path='signup' element={<SignUp/>}/>
