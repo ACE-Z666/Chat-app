@@ -3,79 +3,98 @@ const router = express.Router();
 const UserModel = require('../models/userModel');
 const expressAsyncHandler = require('express-async-handler');
 const generateToken = require('../Config/generateToken');
+const { body, validationResult } = require('express-validator');
 
 
 const loginController = expressAsyncHandler(async (req, res) => {
-    const {name , password} = req.body;
-    const user = await UserModel.findOne({name});
-    if (user && (await user.matchPassword(password))) {
-        res.json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,  
-            isAdmin : user.isAdmin,
-            token: generateToken(user._id), 
-        });
-    }
-    else {
-        res.status(400);
-        throw new Error("Invalid Username or Password");
-    }
+  const { name, password } = req.body;
+  const user = await UserModel.findOne({ name });
 
-
-
-});
-
-
-
-
-const registerController = expressAsyncHandler(async (req, res) => {
-   const { name, email, password } = req.body;
-   
-   if (!name || !email || !password) {
-    res.send (400);
-      throw Error ("Please add all fields");
-   }
-   const userExist = await UserModel.findOne({email});
-   if(userExist){
-    throw new Error("User already exists");
-
-   }
-   const usernameExist = await UserModel.findOne({name});
-   if(usernameExist){
-    throw new Error("Username already exists");
-   }
-    const user = await UserModel.create ({ name, email, password } ); 
-   if (user) {
-    res.status(201).json({
+  if (user && (await user.matchPassword(password))) {
+    res.status(200).json({
+      success: true,
+      data: {
         _id: user.id,
         name: user.name,
-        email: user.email,  
-        isAdmin : user.isAdmin,
+        email: user.email,
+        isAdmin: user.isAdmin,
         token: generateToken(user._id),
-
+      },
+      message: 'Login successful',
     });
-}
-   else {
+  } else {
     res.status(400);
-    throw new Error("Registration Error");
-   } 
+    throw new Error('Invalid Username or Password');
+  }
+});
+
+const registerController = expressAsyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new Error('Please add all fields');
+  }
+
+  const userExist = await UserModel.findOne({ email });
+  if (userExist) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+
+  const usernameExist = await UserModel.findOne({ name });
+  if (usernameExist) {
+    res.status(400);
+    throw new Error('Username already exists');
+  }
+
+  const user = await UserModel.create({ name, email, password });
+  if (user) {
+    res.status(201).json({
+      success: true,
+      data: {
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      },
+      message: 'Registration successful',
+    });
+  } else {
+    res.status(400);
+    throw new Error('Registration Error');
+  }
 });
 
 const fetchAllUsersController = expressAsyncHandler(async (req, res) => {
-    const keyword = req.query.search
+  const keyword = req.query.search
     ? {
         $or: [
-            { name: { $regex: req.query.search, $options: "i" } },
-            { email: { $regex: req.query.search, $options: "i" } },
+          { name: { $regex: req.query.search, $options: 'i' } },
+          { email: { $regex: req.query.search, $options: 'i' } },
         ],
-    }
+      }
     : {};
 
-    const users = await UserModel.find(keyword).find({ _id: { $ne: req.user._id } });
+  const users = await UserModel.find(keyword)
+    .find({ _id: { $ne: req.user._id } })
+    .select('-password');
 
-    res.send(users);
-
+  res.status(200).json({
+    success: true,
+    data: users,
+    message: 'Users fetched successfully',
+  });
 });
+
+router.post(
+  "/register",
+  [
+    body('email').isEmail().withMessage('Invalid email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  ],
+  registerController
+);
 
 module.exports = { loginController, registerController, fetchAllUsersController };

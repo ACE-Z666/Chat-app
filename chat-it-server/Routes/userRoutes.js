@@ -3,12 +3,12 @@ const { loginController, registerController, fetchAllUsersController } = require
 
 const { protect } = require('../middleware/auth');
 
-
+const { validateRegister, validateLogin} = require('../Middleware/validationMiddleware');
 const Router =  express.Router();
 
-Router.post ("/login", loginController);
-Router.post ("/register", registerController);
-Router.get ("/fetchUsers", protect, fetchAllUsersController);
+Router.post ("/login", validateLogin, loginController);
+Router.post ("/register", validateRegister, registerController);
+Router.get ("/users", protect, fetchAllUsersController);
 
 
 module.exports = Router;
