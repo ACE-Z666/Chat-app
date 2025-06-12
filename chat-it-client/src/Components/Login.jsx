@@ -32,33 +32,30 @@ export default function Login()  {
 
   const loginHandler = async () => {
     setLoading(true);
-    console.log(data);
-    try{
+    try {
       const config = {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      };
 
       const response = await axios.post(
         "http://localhost:8080/user/login",
-      data, 
-      config
-    );
+        data,
+        config
+      );
 
-    console.log("Login:", response)
-    setLogInStatus({ msg: "Success", key: Math.random()});
-    setLoading (false);
-    dispatch(login(response.data));
-    localStorage.setItem("userData", JSON.stringify(response.data));
-    navigate("/app/welcome");
+      console.log("Login Response:", response.data);
+      dispatch(login(response.data.data)); // Update Redux store
+      localStorage.setItem("userData", JSON.stringify(response.data.data)); // Store token
+      navigate("/app/welcome");
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
-  catch (error) {
-      setLogInStatus({ msg: "Invalid Username or Password", key: Math.random()});
-      setError(error.response.data.message || "Something went wrong");
-  }setLoading(false);
-  }
-
 
   return (
     
@@ -84,6 +81,7 @@ export default function Login()  {
               <button onClick={loginHandler} className='w-[10vw] h-10 bg-[#f1ce00] rounded-xl text-[#6e6e6e] font-semibold hover:text-[#e0dfd5] hover:bg-[#6e6e6e] transition-all'>Login</button>
               {error && <p className="text-red-500">{error}</p>}
               {loading && <div className="spinner">Loading...</div>}
+
             </div>
           </div>
         </div>

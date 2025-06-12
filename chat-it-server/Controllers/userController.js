@@ -67,26 +67,23 @@ const registerController = expressAsyncHandler(async (req, res) => {
   }
 });
 
-const fetchAllUsersController = expressAsyncHandler(async (req, res) => {
+const fetchAllUsersController = async (req, res) => {
   const keyword = req.query.search
     ? {
         $or: [
-          { name: { $regex: req.query.search, $options: 'i' } },
-          { email: { $regex: req.query.search, $options: 'i' } },
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
         ],
       }
     : {};
 
-  const users = await UserModel.find(keyword)
-    .find({ _id: { $ne: req.user._id } })
-    .select('-password');
-
-  res.status(200).json({
-    success: true,
-    data: users,
-    message: 'Users fetched successfully',
-  });
-});
+  try {
+    const users = await UserModel.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to fetch users" });
+  }
+};
 
 router.post(
   "/register",

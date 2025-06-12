@@ -13,29 +13,32 @@ import ProtectedRoute from './Components/ProtectedRoute'
 
 function App() {
   const lightTheme = useSelector((state) => state.theme.light);
-  const [count, setCount] = useState(0)
+  const [selectedChat, setSelectedChat] = useState(null);
 
   return (
     <>
-    <div id='main' className={'h-screen flex items-center justify-center m-0' + (lightTheme ? " white-img" : " dark-img")}>
-     <Routes>
-      <Route path='/' element={<Login/>}/>
-      <Route path='signup' element={<SignUp/>}/>
-      <Route path='app' element={
-        <ProtectedRoute>
-          <MainContainer />
-        </ProtectedRoute>
-      }>
-       <Route path='welcome' element={<Welcome/>}></Route>
-       <Route path='users' element={<Users/>}></Route>
-       <Route path='groups' element={<Groups/>}></Route>
-       <Route path='chat' element={<ChatArea/>}></Route>
-       <Route path='create_groups' element={<CreateGroups />} ></Route>
-      </Route>
-     </Routes>
-    </div>
+      <div id="main" className={'h-screen flex items-center justify-center m-0' + (lightTheme ? " white-img" : " dark-img")}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route
+            path="app"
+            element={
+              <ProtectedRoute>
+                <MainContainer setSelectedChat={setSelectedChat} />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="welcome" element={<Welcome />} />
+            <Route path="users" element={<Users setSelectedChat={setSelectedChat} />} />
+            <Route path="groups" element={<Groups />} />
+            <Route path="chat" element={<ChatArea selectedChat={selectedChat} />} />
+            <Route path="create_groups" element={<CreateGroups />} />
+          </Route>
+        </Routes>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

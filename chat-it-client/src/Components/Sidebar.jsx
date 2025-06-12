@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -8,34 +8,44 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import SearchIcon from '@mui/icons-material/Search';
 import  { IconButton } from '@mui/material';
 import ConversationsItem from './ConversationsItem';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toggleTheme } from '../Features/themeSlice';
 import { useDispatch } from 'react-redux';
 
+import axios from 'axios';
 
-const Sidebar = () => {
-
+const Sidebar = ({ setSelectedChat }) => {
     const dispatch = useDispatch();
     const lightTheme = useSelector((state) => state.theme.light);
     
-    const [conversations, setConversations] = useState([
-        {
-            name: "Test#1",
-            lastMessage: "Hello",
-            timeStamp: "10:00"
-        },
-        {
-            name: "Test#2",
-            lastMessage: "Hello",
-            timeStamp: "10:00"
-        },
-        {
-            name: "Test#3",
-            lastMessage: "Hello",
-            timeStamp: "10:00"
-        }]);
+    const [conversations, setConversations] = useState([]);
+    const user = JSON.parse(localStorage.getItem("userData"));
+
+    useEffect(() => {
+      if (!user || !user.token) {
+        alert("You are not logged in. Redirecting to login...");
+        window.location.href = "/";
+        return;
+      }
+
+      const fetchChats = async () => {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          };
+
+          const { data } = await axios.get("http://localhost:8080/chat", config);
+          setConversations(data);
+        } catch (error) {
+          console.error("Error fetching chats:", error);
+        }
+      };
+
+      fetchChats();
+    }, []);
         const navigate = useNavigate();
 
   return (
@@ -69,9 +79,9 @@ const Sidebar = () => {
         </IconButton>
         <input placeholder='Search' className={' pl-2 w-full h-6 bg-transparent border:none outline-none' + (lightTheme ? " text-gray-800" : " text-white")} /></div>
        <div id='side-user' className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
-        {conversations.map((conversation) => {
-            return <ConversationsItem props={conversation} key={conversation.name} />
-        })}
+        {conversations.map((conversation) => (
+  <ConversationsItem props={conversation} key={conversation._id} />
+))}
        </div>
           
     </div>

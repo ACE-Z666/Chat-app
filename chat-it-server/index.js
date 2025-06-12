@@ -5,6 +5,8 @@ const userRoutes = require('./Routes/userRoutes');
 const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const http = require("http");
+const { Server } = require("socket.io");
 
 const { default : mongoose } = require('mongoose');
 
@@ -18,6 +20,12 @@ app.use(express.json());
 app.get("/", (req,res) => {
     res.send("API is running...");
 });
+
+const messageRoutes =  require("./Routes/messageRoutes")
+app.use("/messages", messageRoutes);
+
+const chatRoutes = require("./Routes/chatRoutes");
+app.use("/chat", chatRoutes);
 
 console.log(process.env.MONGO_URI)
 
@@ -51,7 +59,46 @@ app.use(helmet());
 const { errorHandler } = require('./Middleware/errorMiddleware');
 app.use(errorHandler);
 
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: ["http://localhost:3000", "http://localhost:5173"], // Allow multiple origins
+    methods: ["GET", "POST"],
+  },
+});
 
-const PORT = process.env.PORT  || 5000;
-app.listen(PORT, () => console.log('Server Running hii'));
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  // Handle joining a chat
+  socket.on("joinChat", (chatId) => {
+    if (!chatId) {
+      console.error("Invalid chatId received in joinChat event");
+      return;
+    }
+    socket.join(chatId);
+    console.log(`User joined chat: ${chatId}`);
+  });
+
+  // Handle sending a message
+  socket.on("sendMessage", (messageData) => {
+    const { chatId, content } = messageData;
+
+    if (!chatId || !content) {
+      console.error("Invalid message data received in sendMessage event");
+      return;
+    }
+
+    // Emit the message to all users in the chat room
+    io.to(chatId).emit("receiveMessage", messageData);
+  });
+
+  // Handle user disconnect
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+  });
+});
+
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
