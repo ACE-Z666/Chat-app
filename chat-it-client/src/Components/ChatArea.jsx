@@ -46,13 +46,46 @@ const ChatArea = ({ selectedChat }) => {
 
   // Listen for real-time messages
   useEffect(() => {
-    socket.on("receiveMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    const handler = (msg) => {
+      console.log("Message received on client:", msg);
+      setMessages((prev) => [...prev, msg]);
+    };
+    socket.on("message received", handler);
+    return () => socket.off("message received", handler);
+  }, []);
+
+  // Join the chat room when selectedChat changes
+  useEffect(() => {
+    if (selectedChat && selectedChat._id) {
+      socket.emit("join chat", selectedChat._id);
+    }
+  }, [selectedChat]);
+
+  // Connect event for socket.io
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket connected!", socket.id);
     });
+    return () => socket.off("connect");
+  }, []);
+
+  // Setup socket on login
+  useEffect(() => {
+    if (user) {
+      socket.emit("setup", user);
+    }
+  }, [user]);
+
+  // Socket disconnect event
+  useEffect(() => {
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected!");
+    });
+    return () => socket.off("disconnect");
   }, []);
 
   // Send a new message
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!newMessage.trim()) return;
 
     const messageData = {
@@ -60,12 +93,28 @@ const ChatArea = ({ selectedChat }) => {
       content: newMessage,
     };
 
-    socket.emit("sendMessage", messageData);
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: { name: user.name }, content: newMessage },
-    ]);
-    setNewMessage("");
+    try {
+      // 1. Save to DB via REST API
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post(
+        "http://localhost:8080/message",
+        messageData,
+        config
+      );
+
+      // 2. Emit via socket.io for real-time
+      socket.emit("new message", data); // ✅ match backend
+
+      // 3. Update local state
+      setMessages((prevMessages) => [...prevMessages, data]);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   console.log("Selected Chat ID:", selectedChat?._id);
@@ -155,3 +204,4 @@ const ChatArea = ({ selectedChat }) => {
 };
 
 export default ChatArea;
+

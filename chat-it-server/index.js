@@ -13,16 +13,15 @@ const { default : mongoose } = require('mongoose');
 const app = express();
 dotenv.config();
 
-app.use(cors());
-
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req,res) => {
     res.send("API is running...");
 });
 
 const messageRoutes =  require("./Routes/messageRoutes")
-app.use("/messages", messageRoutes);
+app.use("/message", messageRoutes);
 
 const chatRoutes = require("./Routes/chatRoutes");
 app.use("/chat", chatRoutes);
@@ -30,14 +29,12 @@ app.use("/chat", chatRoutes);
 console.log(process.env.MONGO_URI)
 
 const connectDb = async () => {
-    try{
-        const connect = await mongoose.connect(process.env.MONGO_URI);
-        console.log('Server is connected to DB')
-    }
-    catch (err) {
-        console.log('Server is not connected to DB', err.message);
-    }
-    
+  try {
+    const connect = await mongoose.connect(process.env.MONGO_URI);
+    console.log("Server is connected to DB");
+  } catch (err) {
+    console.log("Server is not connected to DB", err.message);
+  }
 };
 connectDb();
 
@@ -70,27 +67,19 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Handle joining a chat
-  socket.on("joinChat", (chatId) => {
-    if (!chatId) {
-      console.error("Invalid chatId received in joinChat event");
-      return;
-    }
-    socket.join(chatId);
-    console.log(`User joined chat: ${chatId}`);
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
   });
 
-  // Handle sending a message
-  socket.on("sendMessage", (messageData) => {
-    const { chatId, content } = messageData;
+  socket.on("join chat", (chatId) => {
+    socket.join(chatId);
+    console.log(`Socket ${socket.id} joined room ${chatId}`);
+  });
 
-    if (!chatId || !content) {
-      console.error("Invalid message data received in sendMessage event");
-      return;
-    }
-
-    // Emit the message to all users in the chat room
-    io.to(chatId).emit("receiveMessage", messageData);
+  socket.on("new message", (newMessage) => {
+    const chatId = newMessage.chat._id || newMessage.chat;
+    // Broadcast to all users in the chat room except sender
+    socket.to(chatId).emit("message received", newMessage);
   });
 
   // Handle user disconnect
