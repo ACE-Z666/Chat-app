@@ -35,4 +35,22 @@ router.get("/:chatId", protect, async (req, res) => {
   res.json(messages);
 });
 
+// Mark all messages in a chat as read by the current user
+router.post("/mark-read/:chatId", protect, async (req, res) => {
+  const { chatId } = req.params;
+  try {
+    await Message.updateMany(
+      {
+        chat: chatId,
+        readBy: { $ne: req.user._id },
+        sender: { $ne: req.user._id }, // Don't mark your own messages as unread
+      },
+      { $addToSet: { readBy: req.user._id } }
+    );
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to mark messages as read" });
+  }
+});
+
 module.exports = router;
