@@ -8,18 +8,14 @@ import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 
-const MainContainer = () => {
+const MainContainer = ({ setSelectedChat, selectedChat }) => { // <-- Accept the prop here
 
   const lightTheme = useSelector((state) => state.theme.light);
 
   return (
         <div  className={'h-[90vh] sm:w-[90%]  w-[85%] rounded-2xl flex px-10 py-6 items-center justify-center mx-4 ' + ( lightTheme ? " white-cont" : " dark-cont")}>
-          <Sidebar/>
+          <Sidebar setSelectedChat={setSelectedChat} selectedChat={selectedChat} /> {/* Pass it down */}
           <Outlet  />
-          {/*<Welcome></Welcome> */}
-          {/* <ChatArea/>*/} 
-          {/* <CreateGroups></CreateGroups>*/}
-
         </div>
   )
 }

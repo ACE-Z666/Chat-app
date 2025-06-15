@@ -1,12 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 export default function CreateGroups() {
   const [groupName, setGroupName] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // selected users
+  const [allUsers, setAllUsers] = useState([]); // all available users
   const lightTheme = useSelector((state) => state.theme.light);
   const user = useSelector((state) => state.auth.user);
+
+  // Fetch all users except current user
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${user.token}` },
+        };
+        const { data } = await axios.get(
+          "http://localhost:8080/user/users",
+          config
+        );
+        setAllUsers(data.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchAllUsers();
+  }, [user]);
 
   const createGroup = async () => {
     if (!groupName || !users.length) {
@@ -30,6 +50,8 @@ export default function CreateGroups() {
 
       console.log("Group created successfully:", response.data);
       alert("Group created successfully!");
+      setGroupName("");
+      setUsers([]);
     } catch (error) {
       console.error("Error creating group:", error);
       alert("Error creating group. Please try again.");
@@ -37,8 +59,8 @@ export default function CreateGroups() {
   };
 
   const handleUserSelect = (selectedUser) => {
-    if (users.includes(selectedUser)) {
-      setUsers(users.filter((user) => user !== selectedUser));
+    if (users.some((u) => u._id === selectedUser._id)) {
+      setUsers(users.filter((user) => user._id !== selectedUser._id));
     } else {
       setUsers([...users, selectedUser]);
     }
@@ -52,7 +74,7 @@ export default function CreateGroups() {
           (lightTheme ? "" : " dark-theme")
         }
       >
-        <div className="flex flex-col items-center justify-center gap-y-16 my-36">
+        <div className="flex flex-col items-center justify-center gap-y-10 my-24">
           <div>
             <p
               className={
@@ -72,10 +94,24 @@ export default function CreateGroups() {
               className="w-[20vw] bg-[#e8e9eb] rounded-full px-4 border-none outline-none h-10 text-black"
             />
           </div>
-          <div>
-            {users.map((user) => (
-              <div key={user._id} onClick={() => handleUserSelect(user)}>
-                {user.name}
+          <div className="w-[20vw] max-h-[20vh] overflow-y-auto bg-[#e8e9eb] rounded-xl p-2 mb-2">
+            <p className="font-semibold mb-2 text-gray-700">Add Users:</p>
+            {allUsers.map((u) => (
+              <div
+                key={u._id}
+                onClick={() => handleUserSelect(u)}
+                className={
+                  "cursor-pointer px-2 py-1 rounded-md mb-1 transition-all " +
+                  (users.some((sel) => sel._id === u._id)
+                    ? "bg-[#d18109] text-white"
+                    : "hover:bg-[#f1ce01] hover:text-black")
+                }
+              >
+                {u.name}{" "}
+                <span className="text-xs text-gray-500">({u.email})</span>
+                {users.some((sel) => sel._id === u._id) && (
+                  <span className="ml-2 text-xs">✔</span>
+                )}
               </div>
             ))}
           </div>

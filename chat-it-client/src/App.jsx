@@ -25,15 +25,15 @@ function App() {
             path="app"
             element={
               <ProtectedRoute>
-                <MainContainer setSelectedChat={setSelectedChat} />
+                <MainContainer setSelectedChat={setSelectedChat} selectedChat={selectedChat} />
               </ProtectedRoute>
             }
           >
             <Route path="welcome" element={<Welcome />} />
             <Route path="users" element={<Users setSelectedChat={setSelectedChat} />} />
-            <Route path="groups" element={<Groups />} />
-            <Route path="chat" element={<ChatArea selectedChat={selectedChat} />} />
+            <Route path="groups" element={<Groups setSelectedChat={setSelectedChat} />} />
             <Route path="create_groups" element={<CreateGroups />} />
+            <Route path="chat" element={<ChatArea selectedChat={selectedChat} />} />
           </Route>
         </Routes>
       </div>

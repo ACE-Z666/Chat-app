@@ -15,12 +15,15 @@ import { useDispatch } from 'react-redux';
 
 import axios from 'axios';
 
-const Sidebar = ({ setSelectedChat }) => {
+const Sidebar = ({ setSelectedChat, selectedChat }) => {
     const dispatch = useDispatch();
     const lightTheme = useSelector((state) => state.theme.light);
     
     const [conversations, setConversations] = useState([]);
+    const [activeUsers, setActiveUsers] = useState([]);
+    const [activeGroups, setActiveGroups] = useState([]);
     const user = JSON.parse(localStorage.getItem("userData"));
+    const navigate = useNavigate();
 
     useEffect(() => {
       if (!user || !user.token) {
@@ -46,7 +49,69 @@ const Sidebar = ({ setSelectedChat }) => {
 
       fetchChats();
     }, []);
-        const navigate = useNavigate();
+
+    useEffect(() => {
+      if (!user || !user.token) return;
+
+      const fetchActiveUsers = async () => {
+        try {
+          const config = {
+            headers: { Authorization: `Bearer ${user.token}` },
+          };
+          const { data } = await axios.get("http://localhost:8080/chat/active-users", config);
+          setActiveUsers(data);
+        } catch (error) {
+          console.error("Error fetching active users:", error);
+        }
+      };
+
+      const fetchActiveGroups = async () => {
+        try {
+          const config = {
+            headers: { Authorization: `Bearer ${user.token}` },
+          };
+          const { data } = await axios.get("http://localhost:8080/chat/active-groups", config);
+          setActiveGroups(data);
+        } catch (error) {
+          console.error("Error fetching active groups:", error);
+        }
+      };
+
+      fetchActiveUsers();
+      fetchActiveGroups();
+    }, [user, selectedChat]);
+
+        // Handle user click: fetch or create chat, then set as selected and navigate
+        const handleUserClick = async (userObj) => {
+          try {
+            const config = {
+              headers: { Authorization: `Bearer ${user.token}` },
+            };
+            const { data } = await axios.post(
+              "http://localhost:8080/chat",
+              { userId: userObj._id },
+              config
+            );
+            setSelectedChat(data);
+            navigate("/app/chat"); // <-- Add this
+          } catch (error) {
+            console.error("Error opening chat:", error);
+          }
+        };
+
+        // Handle group click: fetch group chat and set as selected and navigate
+        const handleGroupClick = async (group) => {
+          try {
+            const config = {
+              headers: { Authorization: `Bearer ${user.token}` },
+            };
+            const { data } = await axios.get(`http://localhost:8080/chat/${group._id}`, config);
+            setSelectedChat(data);
+            navigate("/app/chat"); // <-- Add this
+          } catch (error) {
+            console.error("Error opening group chat:", error);
+          }
+        };
 
   return (
     <div className='h-full w-[27vw]  rounded-tl-2xl rounded-l-2xl flex flex-col items-center px-4 py-5' >
@@ -79,9 +144,23 @@ const Sidebar = ({ setSelectedChat }) => {
         </IconButton>
         <input placeholder='Search' className={' pl-2 w-full h-6 bg-transparent border:none outline-none' + (lightTheme ? " text-gray-800" : " text-white")} /></div>
        <div id='side-user' className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
-        {conversations.map((conversation) => (
-  <ConversationsItem props={conversation} key={conversation._id} />
-))}
+        {activeUsers.map((u) => (
+          <ConversationsItem
+            props={u}
+            key={u._id}
+            unreadCount={u.unreadCount}
+            onClick={() => handleUserClick(u)}
+          />
+        ))}
+        {activeGroups.map((g) => (
+          <ConversationsItem
+            props={{ name: g.chatName, _id: g._id }}
+            key={g._id}
+            unreadCount={g.unreadCount}
+            onClick={() => handleGroupClick(g)}
+            isGroup={true}
+          />
+        ))}
        </div>
           
     </div>
