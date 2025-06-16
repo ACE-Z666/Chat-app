@@ -117,6 +117,28 @@ const ChatArea = ({ selectedChat }) => {
     }
   };
 
+  // Mark messages as read when chat is selected
+  useEffect(() => {
+    const markAsRead = async () => {
+      if (!selectedChat || !selectedChat._id) return;
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${user.token}` },
+        };
+        await axios.post(
+          `http://localhost:8080/message/mark-read/${selectedChat._id}`,
+          {},
+          config
+        );
+        // Optionally, trigger a refresh of the sidebar active users list here
+      } catch (error) {
+        console.error("Failed to mark messages as read", error);
+      }
+    };
+
+    markAsRead();
+  }, [selectedChat]);
+
   console.log("Selected Chat ID:", selectedChat?._id);
   return (
     <div className="h-full w-[63vw] sm:px-6 px-2 rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2">
