@@ -26,8 +26,6 @@ app.use("/message", messageRoutes);
 const chatRoutes = require("./Routes/chatRoutes");
 app.use("/chat", chatRoutes);
 
-console.log(process.env.MONGO_URI)
-
 const connectDb = async () => {
   try {
     const connect = await mongoose.connect(process.env.MONGO_URI);
@@ -65,15 +63,12 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-
   socket.on("setup", (userData) => {
     socket.join(userData._id);
   });
 
   socket.on("join chat", (chatId) => {
     socket.join(chatId);
-    console.log(`Socket ${socket.id} joined room ${chatId}`);
   });
 
   socket.on("new message", (newMessage) => {
@@ -84,10 +79,13 @@ io.on("connection", (socket) => {
 
   // Handle user disconnect
   socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
   });
 });
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// "scripts": {
+//   "start": "node index.js"
+// }
 

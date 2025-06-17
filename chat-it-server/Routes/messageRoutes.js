@@ -11,11 +11,14 @@ router.post("/", protect, async (req, res) => {
     return res.status(400).json({ message: "Invalid data passed" });
   }
   try {
-    const message = await Message.create({
+    let message = await Message.create({
       sender: req.user._id,
       chat: chatId,
       content,
     });
+    // Populate sender and chat for consistency
+    message = await message.populate("sender", "name pic email");
+    message = await message.populate("chat");
     res.status(201).json(message);
   } catch (error) {
     console.error("Failed to send message", error);
@@ -47,8 +50,9 @@ router.post("/mark-read/:chatId", protect, async (req, res) => {
       },
       { $addToSet: { readBy: req.user._id } }
     );
-    res.json({ success: true });
+    res.status(200).json({ success: true, message: "Messages marked as read" });
   } catch (error) {
+    console.error("Failed to mark messages as read", error);
     res.status(500).json({ message: "Failed to mark messages as read" });
   }
 });

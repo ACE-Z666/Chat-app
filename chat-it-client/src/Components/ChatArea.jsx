@@ -47,7 +47,6 @@ const ChatArea = ({ selectedChat }) => {
   // Listen for real-time messages
   useEffect(() => {
     const handler = (msg) => {
-      console.log("Message received on client:", msg);
       setMessages((prev) => [...prev, msg]);
     };
     socket.on("message received", handler);
@@ -63,9 +62,7 @@ const ChatArea = ({ selectedChat }) => {
 
   // Connect event for socket.io
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected!", socket.id);
-    });
+    socket.on("connect", () => {});
     return () => socket.off("connect");
   }, []);
 
@@ -78,9 +75,7 @@ const ChatArea = ({ selectedChat }) => {
 
   // Socket disconnect event
   useEffect(() => {
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected!");
-    });
+    socket.on("disconnect", () => {});
     return () => socket.off("disconnect");
   }, []);
 
@@ -139,7 +134,6 @@ const ChatArea = ({ selectedChat }) => {
     markAsRead();
   }, [selectedChat]);
 
-  console.log("Selected Chat ID:", selectedChat?._id);
   return (
     <div className="h-full w-[63vw] sm:px-6 px-2 rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2">
       {/* Chat Header */}
@@ -210,6 +204,11 @@ const ChatArea = ({ selectedChat }) => {
           placeholder="Type a message"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              sendMessage();
+            }
+          }}
           className={
             "pl-1 w-full h-6 bg-transparent border:none outline-none " +
             (lightTheme ? " text-gray-800" : " text-white")
