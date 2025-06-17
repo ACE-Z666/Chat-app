@@ -51,7 +51,7 @@ app.use(limiter);
 // Secure HTTP headers
 app.use(helmet());
 
-const { errorHandler } = require('./Middleware/errorMiddleware');
+const { errorHandler } = require('./middleware/errorMiddleware');
 app.use(errorHandler);
 
 const server = http.createServer(app);
