@@ -167,13 +167,12 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
             onClick={() => handleUserClick(u)}
           />
         ))}
-        {activeGroups.map((g) => (
+        {Array.isArray(activeGroups) && activeGroups.filter(Boolean).map((group, idx) => (
           <ConversationsItem
-            props={{ name: g.chatName, _id: g._id }}
-            key={g._id}
-            unreadCount={g.unreadCount}
-            onClick={() => handleGroupClick(g)}
-            isGroup={true}
+            props={group}
+            key={group?._id ?? idx}
+            unreadCount={group?.unreadCount ?? 0}
+            onClick={() => handleGroupClick(group)}
           />
         ))}
        </div>

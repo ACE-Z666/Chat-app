@@ -187,9 +187,9 @@ const ChatArea = ({ selectedChat }) => {
         ) : messages.length === 0 ? (
           <p>No messages found for this chat.</p>
         ) : (
-          messages.filter(Boolean).map((msg, index) => (
+          Array.isArray(messages) && messages.filter(Boolean).map((msg) => (
             <div
-              key={index}
+              key={msg._id}
               className={
                 msg.sender.name === user.name
                   ? "self-end bg-blue-500 text-white px-4 py-2 rounded-lg"

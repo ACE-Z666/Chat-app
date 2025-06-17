@@ -70,7 +70,7 @@ export default function Login()  {
     <div>
       <div className=' white-cont h-[90vh] px-10 py-7 w-[90vw] rounded-2xl shade-g flex'>
         <div className='h-full w-[27vw] bg-transparent rounded-tl-2xl rounded-l-2xl flex flex-col items-center justify-center px-4 py-5'>
-          <img src="./public/logo1.png" alt="logo" />
+          <img src="./assets/logo1.png" alt="logo" />
         </div>
         <div className='h-full w-[60vw] px-6 bg-transparent rounded-tr-2xl rounded-br-2xl py-5 flex flex-col gap-y-2 items-center justify-center'>
           <div className='h-[75vh] w-full flex justify-center items-center bg-[#E0DFD5] shadow-lg rounded-xl px-9 pb-4'>
