@@ -15,7 +15,10 @@ app.set('trust proxy', 1);
 dotenv.config();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "https://chat-h1wnchd6r-ace-z666s-projects.vercel.app", // Replace with your deployed frontend URL
+  credentials: true
+}));
 
 app.get("/", (req,res) => {
     res.send("API is running...");

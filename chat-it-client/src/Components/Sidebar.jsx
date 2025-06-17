@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -14,7 +14,7 @@ import { toggleTheme } from '../Features/themeSlice';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 
-import axios from 'axios';
+import axios from "axios";
 
 const Sidebar = ({ setSelectedChat, selectedChat }) => {
     const dispatch = useDispatch();
@@ -26,10 +26,22 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
     const user = JSON.parse(localStorage.getItem("userData"));
     const navigate = useNavigate();
 
-    const socket = io(import.meta.env.VITE_API_URL, {
-      transports: ['websocket'],
-      withCredentials: true
-    });
+    const socket = useRef(null);
+
+    useEffect(() => {
+      socket.current = io(import.meta.env.VITE_API_URL, {
+        transports: ["websocket"],
+        withCredentials: true
+      });
+  
+      socket.current.on("connect_error", (err) => {
+        console.error("Socket connection failed:", err);
+      });
+  
+      return () => {
+        socket.current.disconnect();
+      };
+    }, []);
 
     useEffect(() => {
       if (!user || !user.token) {
