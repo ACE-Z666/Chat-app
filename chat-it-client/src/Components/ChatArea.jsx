@@ -187,7 +187,7 @@ const ChatArea = ({ selectedChat }) => {
         ) : messages.length === 0 ? (
           <p>No messages found for this chat.</p>
         ) : (
-          messages.map((msg, index) => (
+          messages.filter(Boolean).map((msg, index) => (
             <div
               key={index}
               className={
