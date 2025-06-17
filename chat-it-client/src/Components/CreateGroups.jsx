@@ -39,7 +39,7 @@ export default function CreateGroups() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/chat/group",
+        `${import.meta.env.VITE_API_URL}/chat/group`,
         {
           chatName: groupName,
           users: users.map((user) => user._id),

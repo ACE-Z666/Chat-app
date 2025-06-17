@@ -61,7 +61,10 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
           const config = {
             headers: { Authorization: `Bearer ${user.token}` },
           };
-          const { data } = await axios.get("http://localhost:8080/chat/active-users", config);
+          const { data } = await axios.get(
+            `${import.meta.env.VITE_API_URL}/chat/active-users`,
+            config
+          );
           setActiveUsers(data);
         } catch (error) {
           console.error("Error fetching active users:", error);
@@ -73,7 +76,10 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
           const config = {
             headers: { Authorization: `Bearer ${user.token}` },
           };
-          const { data } = await axios.get("http://localhost:8080/chat/active-groups", config);
+          const { data } = await axios.get(
+            `${import.meta.env.VITE_API_URL}/chat/active-groups`,
+            config
+          );
           setActiveGroups(data);
         } catch (error) {
           console.error("Error fetching active groups:", error);
@@ -91,7 +97,7 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
               headers: { Authorization: `Bearer ${user.token}` },
             };
             const { data } = await axios.post(
-              "http://localhost:8080/chat",
+              `${import.meta.env.VITE_API_URL}/chat`,
               { userId: userObj._id },
               config
             );
@@ -108,7 +114,10 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
             const config = {
               headers: { Authorization: `Bearer ${user.token}` },
             };
-            const { data } = await axios.get(`http://localhost:8080/chat/${group._id}`, config);
+            const { data } = await axios.get(
+              `${import.meta.env.VITE_API_URL}/chat/${group._id}`,
+              config
+            );
             setSelectedChat(data);
             navigate("/app/chat"); // <-- Add this
           } catch (error) {

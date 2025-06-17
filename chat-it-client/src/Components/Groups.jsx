@@ -36,7 +36,10 @@ export default function Groups({ setSelectedChat }) {
         headers: { Authorization: `Bearer ${user.token}` },
       };
       // Fetch the group chat details
-      const { data } = await axios.get(`http://localhost:8080/chat/${group._id}`, config);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/chat/${group._id}`,
+        config
+      );
       setSelectedChat(data);
       navigate("/app/chat"); // <-- navigate to chat area
     } catch (error) {

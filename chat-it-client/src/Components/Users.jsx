@@ -66,7 +66,7 @@ export default function Users({ setSelectedChat }) {
 
       // Create or fetch a one-on-one chat
       const { data } = await axios.post(
-        "http://localhost:8080/chat",
+        `${import.meta.env.VITE_API_URL}/chat`,
         { userId: selectedUser._id },
         config
       );

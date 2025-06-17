@@ -96,8 +96,14 @@ const ChatArea = ({ selectedChat }) => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:8080/message",
+        `${import.meta.env.VITE_API_URL}/message`,
         messageData,
+        config
+      );
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/message/mark-read/${selectedChat._id}`,
+        {},
         config
       );
 

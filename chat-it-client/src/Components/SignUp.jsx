@@ -32,7 +32,7 @@ const SignUp = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8080/user/register",
+        `${import.meta.env.VITE_API_URL}/user/register`,
         formData,
         config
       );
