@@ -189,14 +189,14 @@ const ChatArea = ({ selectedChat }) => {
         ) : (
           Array.isArray(messages) && messages.filter(Boolean).map((msg) => (
             <div
-              key={msg._id}
+              key={msg?._id}
               className={
-                msg.sender.name === user.name
+                msg?.sender?.name === user?.name
                   ? "self-end bg-blue-500 text-white px-4 py-2 rounded-lg"
                   : "self-start bg-gray-300 text-black px-4 py-2 rounded-lg"
               }
             >
-              <strong>{msg.sender.name}:</strong> {msg.content}
+              <strong>{msg?.sender?.name ?? "Unknown"}:</strong> {msg?.content ?? ""}
             </div>
           ))
         )}

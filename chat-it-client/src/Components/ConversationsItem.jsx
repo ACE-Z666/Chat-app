@@ -12,11 +12,11 @@ const ConversationsItem = ({ props, unreadCount, onClick, isGroup }) => {
     >
       <div className={'flex justify-between' + (lightTheme ? ' text-[#504343]' : ' wt-txt')}>
         <div className={"" + (isGroup ? "group-icon" : "con-icon")}>
-          {props.name ? props.name[0] : "?"}
+          {props?.name ? props.name[0] : "?"}
         </div>
         <div className='flex flex-col pl-2'>
           <div className='flex items-center'>
-            <p className='text-lg font-bold'>{props.name}</p>
+            <p className='text-lg font-bold'>{props?.name ?? "Unnamed"}</p>
             {unreadCount > 0 && (
               <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
                 {unreadCount}
@@ -27,8 +27,8 @@ const ConversationsItem = ({ props, unreadCount, onClick, isGroup }) => {
             )}
           </div>
           <div className='flex justify-between items-center w-[19vw] h-full '>
-            <p className='text-sm'>{props.lastMessage}</p>
-            <p className='text-sm pr-5'>{props.timeStamp}</p>
+            <p className='text-sm'>{props?.lastMessage ?? ""}</p>
+            <p className='text-sm pr-5'>{props?.timeStamp ?? ""}</p>
           </div>
         </div>
       </div>
