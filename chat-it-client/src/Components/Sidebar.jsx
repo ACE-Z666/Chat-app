@@ -161,21 +161,21 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
        <div id='side-user' className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
         {Array.isArray(activeUsers) && activeUsers.filter(Boolean).map((u, idx) => (
           <ConversationsItem
-            props={u}
+            {...u}
             key={u?._id ?? idx}
             unreadCount={u?.unreadCount ?? 0}
             onClick={() => handleUserClick(u)}
           />
         ))}
-
-{Array.isArray(activeGroups) && activeGroups.filter(Boolean).map((group, idx) => (
+        {Array.isArray(activeGroups) && activeGroups.filter(Boolean).map((group, idx) => (
           <ConversationsItem
-            props={group}
+            {...group}
             key={group?._id ?? idx}
             unreadCount={group?.unreadCount ?? 0}
             onClick={() => handleGroupClick(group)}
           />
         ))}
+
        </div>
           
     </div>
@@ -183,3 +183,4 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
 }
 
 export default Sidebar
+
