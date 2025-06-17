@@ -5,12 +5,14 @@ import logo1 from '../assets/logo1.png'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export default function Groups({ setSelectedChat }) {
   const lightTheme = useSelector((state) => state.theme.light);
   const [groups, setGroups] = useState([]);
   const user = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
+  const socket = io(import.meta.env.VITE_API_URL);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -18,7 +20,7 @@ export default function Groups({ setSelectedChat }) {
         const config = {
           headers: { Authorization: `Bearer ${user.token}` },
         };
-        const { data } = await axios.get("http://localhost:8080/chat/active-groups", config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/chat`, config);
         setGroups(data);
       } catch (error) {
         console.error("Error fetching groups:", error);

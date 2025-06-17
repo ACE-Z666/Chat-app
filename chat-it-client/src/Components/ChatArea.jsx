@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("http://localhost:8080");
+const socket = io(import.meta.env.VITE_API_URL);
 
 const ChatArea = ({ selectedChat }) => {
   const lightTheme = useSelector((state) => state.theme.light);
@@ -31,7 +31,7 @@ const ChatArea = ({ selectedChat }) => {
         };
 
         const { data } = await axios.get(
-          `http://localhost:8080/message/${selectedChat._id}`,
+          `${import.meta.env.VITE_API_URL}/chat`,
           config
         );
 

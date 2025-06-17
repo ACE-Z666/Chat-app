@@ -6,6 +6,7 @@ import { Backdrop } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../Features/authSlice";
 import { Navigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 
 
@@ -56,6 +57,8 @@ export default function Login()  {
       setLoading(false);
     }
   }
+
+  const socket = io(import.meta.env.VITE_API_URL);
 
   return (
     

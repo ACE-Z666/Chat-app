@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toggleTheme } from '../Features/themeSlice';
 import { useDispatch } from 'react-redux';
+import { io } from 'socket.io-client';
 
 import axios from 'axios';
 
@@ -24,6 +25,8 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
     const [activeGroups, setActiveGroups] = useState([]);
     const user = JSON.parse(localStorage.getItem("userData"));
     const navigate = useNavigate();
+
+    const socket = io(import.meta.env.VITE_API_URL);
 
     useEffect(() => {
       if (!user || !user.token) {
@@ -40,7 +43,7 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
             },
           };
 
-          const { data } = await axios.get("http://localhost:8080/chat", config);
+          const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/chat`, config);
           setConversations(data);
         } catch (error) {
           console.error("Error fetching chats:", error);

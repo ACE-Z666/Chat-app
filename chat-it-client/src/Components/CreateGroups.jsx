@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 export default function CreateGroups() {
   const [groupName, setGroupName] = useState("");
@@ -8,6 +9,8 @@ export default function CreateGroups() {
   const [allUsers, setAllUsers] = useState([]); // all available users
   const lightTheme = useSelector((state) => state.theme.light);
   const user = useSelector((state) => state.auth.user);
+
+  const socket = io(import.meta.env.VITE_API_URL);
 
   // Fetch all users except current user
   useEffect(() => {
@@ -17,7 +20,7 @@ export default function CreateGroups() {
           headers: { Authorization: `Bearer ${user.token}` },
         };
         const { data } = await axios.get(
-          "http://localhost:8080/user/users",
+          `${import.meta.env.VITE_API_URL}/chat`,
           config
         );
         setAllUsers(data.data);

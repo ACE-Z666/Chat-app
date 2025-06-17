@@ -11,6 +11,7 @@ const { Server } = require("socket.io");
 const { default : mongoose } = require('mongoose');
 
 const app = express();
+app.set('trust proxy', 1);
 dotenv.config();
 
 app.use(express.json());

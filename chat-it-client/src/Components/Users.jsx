@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export default function Users({ setSelectedChat }) {
   const lightTheme = useSelector((state) => state.theme.light);
@@ -12,6 +13,9 @@ export default function Users({ setSelectedChat }) {
   const [allUsers, setAllUsers] = useState([]); // Store all users
   const [filteredUsers, setFilteredUsers] = useState([]); // Store filtered users
   const navigate = useNavigate();
+
+  // Initialize socket connection
+  const socket = io(import.meta.env.VITE_API_URL);
 
   // Fetch all users on mount
   useEffect(() => {
@@ -24,7 +28,7 @@ export default function Users({ setSelectedChat }) {
         };
 
         const { data } = await axios.get(
-          "http://localhost:8080/user/users",
+          `${import.meta.env.VITE_API_URL}/chat`,
           config
         );
         setAllUsers(data.data); // Store all users
