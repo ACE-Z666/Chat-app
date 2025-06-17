@@ -58,7 +58,7 @@ app.use(errorHandler);
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:5173"], // Allow multiple origins
+    origin: ["https://chat-app-flax-psi.vercel.app/", "http://localhost:5173"], // Allow multiple origins
     methods: ["GET", "POST"],
   },
 });
