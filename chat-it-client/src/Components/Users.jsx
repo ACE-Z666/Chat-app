@@ -116,27 +116,30 @@ export default function Users({ setSelectedChat }) {
 
       {/* User List */}
       <div className="flex flex-col mt-4 gap-y-4 overflow-auto rounded-2xl w-full bg-transparent text-stone-500">
-        {filteredUsers.map((user) => (
-          <div
-            key={user._id}
-            className={
-              "h-[7vh] w-full flex justify-start items-center rounded-xl px-9 pb-4 shade-g pt-4 transition-all hover:text-black" +
-              (lightTheme
-                ? " hover:bg-[#f1ce01] text-gray-500 bg-[#E0DFD5]"
-                : " text-white hover:bg-[rgb(240,240,240)] bg-[#2d3941]")
-            }
-            onClick={() => handleUserSelect(user)}
-          >
-            <div className={"" + (lightTheme ? "con-icon" : " con-icon-d")}>
-              {user.name[0]}
-            </div>
-            <div className="flex flex-col pl-2">
-              <div>
-                <p className="text-lg font-semibold pl-2">{user.name}</p>
+        {Array.isArray(filteredUsers) &&
+          filteredUsers.filter(Boolean).map((user, idx) => (
+            <div
+              key={user?._id ?? idx}
+              className={
+                "h-[7vh] w-full flex justify-start items-center rounded-xl px-9 pb-4 shade-g pt-4 transition-all hover:text-black" +
+                (lightTheme
+                  ? " hover:bg-[#f1ce01] text-gray-500 bg-[#E0DFD5]"
+                  : " text-white hover:bg-[rgb(240,240,240)] bg-[#2d3941]")
+              }
+              onClick={() => handleUserSelect(user)}
+            >
+              <div className={"" + (lightTheme ? "con-icon" : " con-icon-d")}>
+                {user?.name?.[0] ?? "?"}
+              </div>
+              <div className="flex flex-col pl-2">
+                <div>
+                  <p className="text-lg font-semibold pl-2">
+                    {user?.name ?? "Unnamed"}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

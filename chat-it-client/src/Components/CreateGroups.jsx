@@ -102,24 +102,27 @@ export default function CreateGroups() {
           </div>
           <div className="w-[20vw] max-h-[20vh] overflow-y-auto bg-[#e8e9eb] rounded-xl p-2 mb-2">
             <p className="font-semibold mb-2 text-gray-700">Add Users:</p>
-            {allUsers.map((u) => (
-              <div
-                key={u._id}
-                onClick={() => handleUserSelect(u)}
-                className={
-                  "cursor-pointer px-2 py-1 rounded-md mb-1 transition-all " +
-                  (users.some((sel) => sel._id === u._id)
-                    ? "bg-[#d18109] text-white"
-                    : "hover:bg-[#f1ce01] hover:text-black")
-                }
-              >
-                {u.name}{" "}
-                <span className="text-xs text-gray-500">({u.email})</span>
-                {users.some((sel) => sel._id === u._id) && (
-                  <span className="ml-2 text-xs">✔</span>
-                )}
-              </div>
-            ))}
+            {Array.isArray(allUsers) &&
+              allUsers.filter(Boolean).map((u, idx) => (
+                <div
+                  key={u?._id ?? idx}
+                  onClick={() => handleUserSelect(u)}
+                  className={
+                    "cursor-pointer px-2 py-1 rounded-md mb-1 transition-all " +
+                    (users.some((sel) => sel._id === u._id)
+                      ? "bg-[#d18109] text-white"
+                      : "hover:bg-[#f1ce01] hover:text-black")
+                  }
+                >
+                  {u?.name ?? "Unnamed"}{" "}
+                  <span className="text-xs text-gray-500">
+                    ({u?.email ?? "No email"})
+                  </span>
+                  {users.some((sel) => sel._id === u?._id) && (
+                    <span className="ml-2 text-xs">✔</span>
+                  )}
+                </div>
+              ))}
           </div>
           <div>
             <button

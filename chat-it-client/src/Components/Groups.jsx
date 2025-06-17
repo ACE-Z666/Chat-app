@@ -62,17 +62,17 @@ export default function Groups({ setSelectedChat }) {
         </IconButton>
         <input placeholder='Search Users & Groups' className=' pl-2 w-full h-8 bg-transparent border:none outline-none' /></div>
        <div className='flex flex-col mt-4 gap-y-4 overflow-auto rounded-2xl w-full bg-transparent   text-stone-500'>
-         {groups.map((group) => (
+         {Array.isArray(groups) && groups.filter(Boolean).map((group, idx) => (
            <div
-             key={group._id}
+             key={group?._id ?? idx}
              className={'h-[7vh] w-full flex justify-start items-center rounded-xl px-9 pb-4 shade-g pt-4 transition-all hover:text-black' + (lightTheme ? " hover:bg-[#f1ce01] text-gray-500 bg-[#E0DFD5] " : " text-white hover:bg-[rgb(240,240,240)] bg-[#2d3941]")}
              onClick={() => handleGroupClick(group)}
            >
-             <div className={'' + (lightTheme ? "con-icon" : " con-icon-d")}>{group.chatName[0]}</div>
+             <div className={'' + (lightTheme ? "con-icon" : " con-icon-d")}>{group?.chatName?.[0] ?? "?"}</div>
              <div className='flex flex-col pl-2'>
                <div className='flex items-center'>
-                 <p className='text-lg font-semibold pl-2'>{group.chatName}</p>
-                 {group.unreadCount > 0 && (
+                 <p className='text-lg font-semibold pl-2'>{group?.chatName ?? "Unnamed"}</p>
+                 {group?.unreadCount > 0 && (
                    <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
                      {group.unreadCount}
                    </span>
