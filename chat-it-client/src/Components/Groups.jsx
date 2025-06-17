@@ -12,7 +12,10 @@ export default function Groups({ setSelectedChat }) {
   const [groups, setGroups] = useState([]);
   const user = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
-  const socket = io(import.meta.env.VITE_API_URL);
+  const socket = io(import.meta.env.VITE_API_URL, {
+    transports: ['websocket'],
+    withCredentials: true
+  });
 
   useEffect(() => {
     const fetchGroups = async () => {

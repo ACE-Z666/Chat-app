@@ -6,7 +6,10 @@ import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io(import.meta.env.VITE_API_URL);
+const socket = io(import.meta.env.VITE_API_URL, {
+  transports: ['websocket'],
+  withCredentials: true
+});
 
 const ChatArea = ({ selectedChat }) => {
   const lightTheme = useSelector((state) => state.theme.light);

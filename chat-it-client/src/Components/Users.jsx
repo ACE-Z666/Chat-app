@@ -15,7 +15,10 @@ export default function Users({ setSelectedChat }) {
   const navigate = useNavigate();
 
   // Initialize socket connection
-  const socket = io(import.meta.env.VITE_API_URL);
+  const socket = io(import.meta.env.VITE_API_URL, {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
 
   // Fetch all users on mount
   useEffect(() => {

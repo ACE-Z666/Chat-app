@@ -10,7 +10,10 @@ export default function CreateGroups() {
   const lightTheme = useSelector((state) => state.theme.light);
   const user = useSelector((state) => state.auth.user);
 
-  const socket = io(import.meta.env.VITE_API_URL);
+  const socket = io(import.meta.env.VITE_API_URL, {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
 
   // Fetch all users except current user
   useEffect(() => {

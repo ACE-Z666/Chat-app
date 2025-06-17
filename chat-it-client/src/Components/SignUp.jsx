@@ -13,7 +13,10 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const socket = io(import.meta.env.VITE_API_URL);
+  const socket = io(import.meta.env.VITE_API_URL, {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

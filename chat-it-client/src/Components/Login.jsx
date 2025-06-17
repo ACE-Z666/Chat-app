@@ -58,7 +58,10 @@ export default function Login()  {
     }
   }
 
-  const socket = io(import.meta.env.VITE_API_URL);
+  const socket = io(import.meta.env.VITE_API_URL, {
+    transports: ['websocket'],
+    withCredentials: true
+  });
 
   return (
     
