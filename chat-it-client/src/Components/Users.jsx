@@ -31,10 +31,10 @@ export default function Users({ setSelectedChat }) {
         };
 
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/chat`,
+          `${import.meta.env.VITE_API_URL}/user/users`,
           config
         );
-        setAllUsers(data.data); // Store all users
+        setAllUsers(data.data); // data.data is correct for /user/users
         setFilteredUsers(data.data); // Initially, show all users
       } catch (error) {
         console.error("Error fetching users:", error);

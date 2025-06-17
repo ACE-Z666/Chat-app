@@ -159,8 +159,8 @@ const Sidebar = ({ setSelectedChat, selectedChat }) => {
         </IconButton>
         <input placeholder='Search' className={' pl-2 w-full h-6 bg-transparent border:none outline-none' + (lightTheme ? " text-gray-800" : " text-white")} /></div>
        <div id='side-user' className={'h-[76vh] w-[96%] flex flex-col items-start rounded-2xl text-white bg-[#E0DFD5] px-4 pt-6 shade-g' + (lightTheme ? "" : " dark-theme")}>
-        {activeUsers.map((u) => (
-          <ConversationsItem
+        {Array.isArray(activeUsers) && activeUsers.map((u) => (
+          u && <ConversationsItem
             props={u}
             key={u._id}
             unreadCount={u.unreadCount}
