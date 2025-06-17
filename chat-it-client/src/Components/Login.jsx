@@ -46,7 +46,9 @@ export default function Login()  {
         config
       );
 
-      console.log("Login Response:", response.data);
+      const user = response.data;
+      console.log("Logged in user:", user.name);
+
       dispatch(login(response.data.data)); // Update Redux store
       localStorage.setItem("userData", JSON.stringify(response.data.data)); // Store token
       navigate("/app/welcome");
@@ -87,6 +89,7 @@ export default function Login()  {
               <button onClick={loginHandler} className='w-[10vw] h-10 bg-[#f1ce00] rounded-xl text-[#6e6e6e] font-semibold hover:text-[#e0dfd5] hover:bg-[#6e6e6e] transition-all'>Login</button>
               {error && <p className="text-red-500">{error}</p>}
               {loading && <div className="spinner">Loading...</div>}
+              {user?.name && <h2>Welcome, {user.name}</h2>}
 
             </div>
           </div>
