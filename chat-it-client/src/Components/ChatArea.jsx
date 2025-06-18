@@ -46,7 +46,7 @@ const ChatArea = ({ selectedChat }) => {
         };
 
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/chat`,
+          `${import.meta.env.VITE_API_URL}/message/${selectedChat._id}`,
           config
         );
 
