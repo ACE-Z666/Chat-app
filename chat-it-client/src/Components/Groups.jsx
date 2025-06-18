@@ -24,7 +24,8 @@ export default function Groups({ setSelectedChat }) {
           headers: { Authorization: `Bearer ${user.token}` },
         };
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/chat`, config);
-        setGroups(data);
+        // Only keep group chats
+        setGroups(Array.isArray(data) ? data.filter(chat => chat.isGroupChat) : []);
       } catch (error) {
         console.error("Error fetching groups:", error);
       }
