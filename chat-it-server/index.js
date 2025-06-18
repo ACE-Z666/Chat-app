@@ -16,7 +16,11 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({
-  origin: "https://chat-h1wnchd6r-ace-z666s-projects.vercel.app", // Replace with your deployed frontend URL
+  origin: [
+    "https://chat-app-git-hostedv-ace-z666s-projects.vercel.app",
+    "https://chat-mn7k75cqg-ace-z666s-projects.vercel.app", // your deployed frontend
+    "http://localhost:5173"
+  ],
   credentials: true
 }));
 
@@ -59,11 +63,16 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 app.use(errorHandler);
 
 const server = http.createServer(app);
-const io = require("socket.io")(server, {
+const io = new Server(server, {
   cors: {
-    origin: ["https://chat-app-flax-psi.vercel.app/", "http://localhost:5173"], // Allow multiple origins
+    origin: [
+      "https://chat-app-git-hostedv-ace-z666s-projects.vercel.app",
+      "https://chat-mn7k75cqg-ace-z666s-projects.vercel.app",
+      "http://localhost:5173"
+    ],
     methods: ["GET", "POST"],
-  },
+    credentials: true
+  }
 });
 
 io.on("connection", (socket) => {

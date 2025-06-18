@@ -1,15 +1,10 @@
 import { IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import axios from "axios";
-
-const socket = io(import.meta.env.VITE_API_URL, {
-  transports: ['websocket'],
-  withCredentials: true
-});
 
 const ChatArea = ({ selectedChat }) => {
   const lightTheme = useSelector((state) => state.theme.light);
@@ -17,6 +12,23 @@ const ChatArea = ({ selectedChat }) => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem("userData"));
+  const socket = useRef(null);
+
+  // Initialize socket connection
+  useEffect(() => {
+    socket.current = io(import.meta.env.VITE_API_URL, {
+      transports: ["websocket"],
+      withCredentials: true
+    });
+
+    socket.current.on("connect_error", (err) => {
+      console.error("Socket connection failed:", err);
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
 
   // Fetch messages for the selected chat
   useEffect(() => {
@@ -52,34 +64,34 @@ const ChatArea = ({ selectedChat }) => {
     const handler = (msg) => {
       setMessages((prev) => [...prev, msg]);
     };
-    socket.on("message received", handler);
-    return () => socket.off("message received", handler);
+    socket.current.on("message received", handler);
+    return () => socket.current.off("message received", handler);
   }, []);
 
   // Join the chat room when selectedChat changes
   useEffect(() => {
     if (selectedChat && selectedChat._id) {
-      socket.emit("join chat", selectedChat._id);
+      socket.current.emit("join chat", selectedChat._id);
     }
   }, [selectedChat]);
 
   // Connect event for socket.io
   useEffect(() => {
-    socket.on("connect", () => {});
-    return () => socket.off("connect");
+    socket.current.on("connect", () => {});
+    return () => socket.current.off("connect");
   }, []);
 
   // Setup socket on login
   useEffect(() => {
     if (user) {
-      socket.emit("setup", user);
+      socket.current.emit("setup", user);
     }
   }, [user]);
 
   // Socket disconnect event
   useEffect(() => {
-    socket.on("disconnect", () => {});
-    return () => socket.off("disconnect");
+    socket.current.on("disconnect", () => {});
+    return () => socket.current.off("disconnect");
   }, []);
 
   // Send a new message
@@ -111,7 +123,7 @@ const ChatArea = ({ selectedChat }) => {
       );
 
       // 2. Emit via socket.io for real-time
-      socket.emit("new message", data); // ✅ match backend
+      socket.current.emit("new message", data); // ✅ match backend
 
       // 3. Update local state
       setMessages((prevMessages) => [...prevMessages, data]);

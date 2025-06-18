@@ -13,7 +13,6 @@ import { useSelector } from 'react-redux';
 import { toggleTheme } from '../Features/themeSlice';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-
 import axios from "axios";
 
 const Sidebar = ({ setSelectedChat, selectedChat }) => {
